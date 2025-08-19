@@ -24,7 +24,11 @@ let txtRef = ref(db, "cutNum")
 
 let pUpdater = (numList) => set(txtRef, numList)
 
-onValue(txtRef, s => s.exists() && (p.innerText = s.val()))
+onValue(txtRef, snapshot => {
+  if (snapshot.exists()) {
+    p.innerText = snapshot.val();
+  }
+});
 
 export {pUpdater}
 
