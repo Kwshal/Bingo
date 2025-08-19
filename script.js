@@ -3,7 +3,7 @@ import {pUpdater} from "./db.js"
 let cells = document.querySelectorAll(".board .cell");
 let bells = document.querySelectorAll(".bingo-container .bell");
 let numList = [];
-
+let cutNumList = [];
 let board = document.querySelector(".board")
 
 board.addEventListener("click", playSound);
@@ -49,16 +49,21 @@ cells.forEach(cell =>
             let audio = document.getElementById("pick-sound");
             audio.play();
             this.classList.toggle("invert");
+            let num = this.childNodes[0].textConent;
             if (!this.querySelector("#cut")) {
                 let cut = document.createElement("img");
                 cut.id = "cut"
                 cut.alt = "no cut"
                 cut.src = "cut.svg";
                 cell.appendChild(cut);
+                // append the number 
+                cutNumList.push(num);
             } else {
                 this.querySelector("#cut").remove();
+                // remove if exists
+                cutNumList.splice(cutNumList.indexOf(num), 1)
             }
-            pUpdater()
+            pUpdater(cutNumList)
         }
     ));
 
