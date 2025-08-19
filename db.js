@@ -1,8 +1,7 @@
-// Import Firebase SDKs
+// db.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
-// Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyABxgXrl0ZawYX4U_Bqpt9HRVgSaW1CA7k",
   authDomain: "bingo-ace.firebaseapp.com",
@@ -15,19 +14,19 @@ const firebaseConfig = {
 
 const p = document.getElementById("sharedText");
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const txtRef = ref(db, "cutNum");
 
-// Writer function
-const pUpdater = (numList) => set(txtRef, numList);
+// write array of cut numbers
+export const pUpdater = (numList) => set(txtRef, numList);
 
-// Listener
+// reflect realtime updates in <p id="sharedText">
 onValue(txtRef, (snapshot) => {
   if (snapshot.exists()) {
+    // arrays render as "1,2,3"
     p.innerText = snapshot.val();
+  } else {
+    p.innerText = "";
   }
 });
-
-export { pUpdater };
