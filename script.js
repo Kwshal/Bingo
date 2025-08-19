@@ -1,10 +1,10 @@
-import {pUpdater} from "./db.js"
+import { pUpdater } from "./db.js";
 
 let cells = document.querySelectorAll(".board .cell");
 let bells = document.querySelectorAll(".bingo-container .bell");
 let numList = [];
 let cutNumList = [];
-let board = document.querySelector(".board")
+let board = document.querySelector(".board");
 
 board.addEventListener("click", playSound);
 
@@ -16,16 +16,13 @@ function playSound(e) {
 }
 
 let fillNumbers = () => {
-
     try {
         numList = [];
 
         for (let i = 0; i < 25; i++) {
-            let randNum = Math.floor(Math
-                .random() * 25 + 1);
+            let randNum = Math.floor(Math.random() * 25 + 1);
 
-            if (!numList.includes(
-                randNum)) {
+            if (!numList.includes(randNum)) {
                 numList.push(randNum);
                 cells[i].innerHTML = randNum;
             } else {
@@ -33,8 +30,62 @@ let fillNumbers = () => {
             }
         }
     } catch (er) {
-        document.getElementById("p")
-            .innerText = er.message ||
+        document.getElementById("p").innerText = er.message || numList;
+    }
+};
+
+fillNumbers();
+
+cells.forEach(cell =>
+    cell.addEventListener("click", function () {
+        let audio = document.getElementById("pick-sound");
+        audio.play();
+
+        this.classList.toggle("invert");
+        let num = this.textContent.trim(); // ✅ safer than childNodes[0].textConent
+
+        if (!this.querySelector("#cut")) {
+            let cut = document.createElement("img");
+            cut.id = "cut";
+            cut.alt = "no cut";
+            cut.src = "cut.svg";
+            this.appendChild(cut);
+
+            cutNumList.push(num);
+        } else {
+            this.querySelector("#cut").remove();
+
+            let idx = cutNumList.indexOf(num);
+            if (idx !== -1) cutNumList.splice(idx, 1); // ✅ prevent accidental removal
+        }
+
+        pUpdater(cutNumList);
+    })
+);
+
+bells.forEach(bell =>
+    bell.addEventListener("click", function () {
+        this.classList.toggle("check");
+    })
+);
+
+document.getElementById("btn").onclick = () => {
+    cells.forEach(cell => {
+        cell.classList.remove("invert");
+        let cut = cell.querySelector("#cut");
+        if (cut) cut.remove(); // ✅ reset cuts on refresh
+    });
+    bells.forEach(bell => {
+        bell.classList.remove("check");
+    });
+    cutNumList = []; // ✅ reset cut list on refresh
+    fillNumbers();
+};
+
+function audioPlay() {
+    let audio = document.getElementById("click-sound");
+    audio.play();
+                 }            .innerText = er.message ||
             numList;
     }
 };
