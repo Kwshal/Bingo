@@ -22,9 +22,9 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app)
 let txtRef = ref(db, "cutNum")
 
-let pUpdater = () => set(txtRef, p.innerText)
+let pUpdater = (numList) => set(txtRef, numList)
 
-onValue(txtRef, s => s.exists() && p.innerText !== s.val() && (p.innerText = s.val()))
+onValue(txtRef, s => s.exists() && (p.innerText = s.val()))
 
 export {pUpdater}
 
