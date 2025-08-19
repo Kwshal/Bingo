@@ -1,3 +1,5 @@
+import {pUpdater} from "./db.js"
+
 let cells = document.querySelectorAll(".board .cell");
 let bells = document.querySelectorAll(".bingo-container .bell");
 let numList = [];
@@ -56,6 +58,7 @@ cells.forEach(cell =>
             } else {
                 this.querySelector("#cut").remove();
             }
+            pUpdater()
         }
     ));
 
